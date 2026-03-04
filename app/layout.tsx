@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import { Geist_Mono, Urbanist } from "next/font/google";
 import "./globals.css";
-import { LaptopMinimalCheckIcon } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
+import { Header } from "@/components/layout/header";
 
 const geistMono = Geist_Mono({
   subsets: ["latin"],
@@ -16,8 +14,9 @@ const urbanist = Urbanist({
 });
 
 export const metadata: Metadata = {
-  title: "Recomendador de productos",
-  description: "Recomendador de productos",
+  title: "PC Finder - Recomendador de productos",
+  description:
+    "Encuentra el computador perfecto para ti. Laptops, Desktops y All-in-One recomendados por nuestro algoritmo.",
 };
 
 export default function RootLayout({
@@ -30,7 +29,8 @@ export default function RootLayout({
       <body
         className={`${urbanist.variable} ${geistMono.variable} antialiased`}
       >
-        <main className="relative min-h-screen w-full flex flex-col gap-3 bg-mist-50 font-sans dark:bg-black p-6">
+        <Header />
+        <main className="relative min-h-screen w-full flex flex-col font-sans">
           {children}
         </main>
       </body>

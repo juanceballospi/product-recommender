@@ -54,3 +54,35 @@ export async function getProducts(params: ProductQueryParams) {
     currentPage: page,
   };
 }
+
+// 4. Query para obtener un producto por ID con sus features y categoría
+export async function getProductById(id: string) {
+  return await prisma.product.findUnique({
+    where: { id },
+    include: {
+      category: true,
+      productFeatures: {
+        include: { feature: true },
+        orderBy: { feature: { name: "asc" } },
+      },
+    },
+  });
+}
+
+// 5. Query para obtener productos relacionados (misma categoría, excluyendo el actual)
+export async function getRelatedProducts(
+  categoryId: string,
+  excludeId: string,
+  limit = 4
+) {
+  return await prisma.product.findMany({
+    where: {
+      categoryId,
+      id: { not: excludeId },
+      isActive: true,
+    },
+    include: { category: true },
+    take: limit,
+    orderBy: { createdAt: "desc" },
+  });
+}

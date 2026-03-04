@@ -23,7 +23,7 @@ export default async function Home(props: {
   const categories = await getCategories();
 
   return (
-    <>
+    <div className="px-6 pt-6">
       <Hero />
       <div className="container mx-auto pb-16">
         {/* Filtros de categoría */}
@@ -37,6 +37,6 @@ export default async function Home(props: {
           <ProductList categoryId={categoryId} page={page} limit={limit} />
         </Suspense>
       </div>
-    </>
+    </div>
   );
 }
