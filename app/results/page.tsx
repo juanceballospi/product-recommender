@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, RotateCcw } from "lucide-react";
 import { getRecommendations } from "@/lib/actions";
 import { SurveyResults } from "@/components/survey/results";
 import { Button } from "@/components/ui/button";
@@ -21,8 +21,8 @@ export default async function ResultsPage(props: {
 
   if (!hasAnswers) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
-        <p className="text-muted-foreground">
+      <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4 px-4">
+        <p className="text-muted-foreground text-lg">
           No encontramos respuestas para calcular.
         </p>
         <Button asChild variant="outline">
@@ -38,14 +38,24 @@ export default async function ResultsPage(props: {
   const { match, others } = await getRecommendations(answers);
 
   return (
-    <div className="container mx-auto py-4 pb-16">
-      <Button asChild variant="ghost" size="sm" className="mb-4">
-        <Link href="/">
-          <ArrowLeft className="mr-2 size-4" />
-          Volver al catálogo
-        </Link>
-      </Button>
-      <SurveyResults match={match} others={others} />
+    <div className="py-8 px-4">
+      <div className="max-w-5xl mx-auto">
+        <div className="flex items-center justify-between mb-8">
+          <Button asChild variant="ghost" size="sm">
+            <Link href="/">
+              <ArrowLeft className="mr-2 size-4" />
+              Volver al catalogo
+            </Link>
+          </Button>
+          <Button asChild variant="outline" size="sm" className="gap-1.5">
+            <Link href="/survey">
+              <RotateCcw className="size-3.5" />
+              Repetir test
+            </Link>
+          </Button>
+        </div>
+        <SurveyResults match={match} others={others} />
+      </div>
     </div>
   );
 }
