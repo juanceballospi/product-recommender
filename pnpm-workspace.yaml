@@ -1,5 +1,7 @@
 onlyBuiltDependencies:
-  - '@prisma/engines'
+  - "@prisma/engines"
   - esbuild
-  - 'msw@2.12.10'
+  - "msw@2.12.10"
   - prisma
+  - "sharp@0.34.5"
+  - "unrs-resolver@1.11.1"
