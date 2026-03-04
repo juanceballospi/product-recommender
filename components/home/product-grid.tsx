@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { Product, Category } from "../../app/generated/prisma/client";
 import {
   Card,
@@ -27,10 +28,10 @@ export function ProductGrid({ products }: { products: ProductWithCategory[] }) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
       {products.map((product) => (
-        <Card
-          key={product.id}
-          className="flex flex-col justify-between overflow-hidden group hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 py-0 gap-0"
-        >
+        <Link key={product.id} href={`/product/${product.id}`}>
+          <Card
+            className="flex flex-col justify-between overflow-hidden group hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 py-0 gap-0 h-full"
+          >
           <CardHeader className="p-0">
             <div className="relative w-full aspect-video bg-muted overflow-hidden">
               <Image
@@ -57,9 +58,8 @@ export function ProductGrid({ products }: { products: ProductWithCategory[] }) {
               ${product.price.toLocaleString("es-CO")}
             </span>
           </CardContent>
-          {/* <CardFooter className="p-4 pt-0 flex justify-between items-center">
-          </CardFooter> */}
-        </Card>
+          </Card>
+        </Link>
       ))}
     </div>
   );

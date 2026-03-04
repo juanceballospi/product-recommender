@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { ProductGrid } from "@/components/home/product-grid"; // Reutilizamos tu grid anterior
@@ -11,7 +12,8 @@ export function SurveyResults({ match, others }: { match: any; others: any[] }) 
       <h2 className="text-3xl font-extrabold text-center mb-8">¡Hemos encontrado tu PC Ideal!</h2>
       
       {/* EL MATCH PRINCIPAL */}
-      <Card className="flex flex-col md:flex-row overflow-hidden border-primary border-2 shadow-xl mb-12">
+      <Link href={`/product/${match.id}`}>
+        <Card className="flex flex-col md:flex-row overflow-hidden border-primary border-2 shadow-xl mb-12 hover:shadow-2xl transition-shadow duration-300">
         <div className="md:w-1/2 relative min-h-[300px] bg-muted">
           <Image 
             src={match.imageUrl} 
@@ -31,9 +33,8 @@ export function SurveyResults({ match, others }: { match: any; others: any[] }) 
             ${match.price.toLocaleString("es-CO")}
           </div>
         </div>
-      </Card>
-
-      {/* OTRAS OPCIONES (THE OTHERS) */}
+        </Card>
+      </Link>      {/* OTRAS OPCIONES (THE OTHERS) */}
       <div>
         <h3 className="text-2xl font-bold mb-6">Otras excelentes alternativas para ti</h3>
         {/* Reutilizamos el grid que ya construiste, pasándole 'others' */}
