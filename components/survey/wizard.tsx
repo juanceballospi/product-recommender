@@ -4,15 +4,9 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { surveyQuestions } from "@/lib/survey-data";
 import { Button } from "@/components/ui/button";
-import {
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
+import { cn } from "@/lib/utils";
+import { ArrowLeft, ArrowRight, Loader2, Sparkles, CheckCircle2 } from "lucide-react";
 
 interface SurveyWizardProps {
   onClose?: () => void;
@@ -53,60 +47,104 @@ export function SurveyWizard({ onClose }: SurveyWizardProps) {
   };
 
   return (
-    <>
-      <CardHeader className="pb-2">
-        <div className="mb-3">
-          <Progress value={progress} className="h-1.5" />
-          <p className="text-sm text-muted-foreground text-center mt-2">
-            Pregunta {currentStep + 1} de {surveyQuestions.length}
-          </p>
+    <div className="flex flex-col gap-5 px-6 py-5">
+      {/* Progress Section */}
+      <div className="flex flex-col gap-2">
+        <div className="flex items-center justify-between">
+          <span className="text-xs font-medium text-muted-foreground font-mono">
+            {String(currentStep + 1).padStart(2, "0")} / {String(surveyQuestions.length).padStart(2, "0")}
+          </span>
+          <span className="text-xs font-medium text-muted-foreground">
+            {Math.round(progress)}% completado
+          </span>
         </div>
-        <CardTitle className="text-lg leading-snug text-center">{question.text}</CardTitle>
-      </CardHeader>
+        <Progress value={progress} className="h-1.5" />
+      </div>
 
-      <CardContent>
-        <RadioGroup
-          value={answers[question.id] || ""}
-          onValueChange={handleSelect}
-          className="flex flex-col space-y-2"
-        >
-          {question.options.map((option) => (
-            <div key={option.value} className="flex items-center space-x-3">
-              <RadioGroupItem
-                value={option.value}
-                id={`${question.id}-${option.value}`}
-              />
-              <Label
-                htmlFor={`${question.id}-${option.value}`}
-                className="flex flex-1 px-4 py-3 border rounded-md cursor-pointer hover:bg-muted transition-colors leading-snug font-normal text-sm"
+      {/* Question */}
+      <h3 className="text-lg font-bold leading-snug text-foreground">
+        {question.text}
+      </h3>
+
+      {/* Options as selectable cards */}
+      <div className="flex flex-col gap-2.5">
+        {question.options.map((option, idx) => {
+          const isSelected = answers[question.id] === option.value;
+          return (
+            <button
+              key={option.value}
+              onClick={() => handleSelect(option.value)}
+              className={cn(
+                "relative flex items-center gap-3 w-full px-4 py-3.5 rounded-xl border text-left transition-all duration-200",
+                isSelected
+                  ? "border-primary bg-primary/5 ring-1 ring-primary/20"
+                  : "border-border bg-card hover:border-muted-foreground/30 hover:bg-accent/50"
+              )}
+            >
+              {/* Index letter indicator */}
+              <span
+                className={cn(
+                  "flex size-7 shrink-0 items-center justify-center rounded-lg text-xs font-bold transition-colors",
+                  isSelected
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-muted text-muted-foreground"
+                )}
+              >
+                {isSelected ? (
+                  <CheckCircle2 className="size-4" />
+                ) : (
+                  String.fromCharCode(65 + idx)
+                )}
+              </span>
+              <span
+                className={cn(
+                  "text-sm font-medium leading-snug transition-colors",
+                  isSelected ? "text-foreground" : "text-muted-foreground"
+                )}
               >
                 {option.label}
-              </Label>
-            </div>
-          ))}
-        </RadioGroup>
-      </CardContent>
+              </span>
+            </button>
+          );
+        })}
+      </div>
 
-      <CardFooter className="flex justify-end gap-x-2 pt-2">
+      {/* Navigation */}
+      <div className="flex items-center justify-between pt-2 border-t">
         <Button
-          variant="outline"
+          variant="ghost"
+          size="sm"
           onClick={handlePrevious}
           disabled={currentStep === 0 || isSubmitting}
+          className="gap-1.5"
         >
+          <ArrowLeft className="size-4" />
           Anterior
         </Button>
         <Button
           onClick={handleNext}
           disabled={!hasAnsweredCurrent || isSubmitting}
-          className="w-36"
+          size="sm"
+          className="gap-1.5 min-w-[140px]"
         >
-          {isSubmitting
-            ? "Calculando..."
-            : isLastStep
-              ? "Ver Resultados"
-              : "Siguiente →"}
+          {isSubmitting ? (
+            <>
+              <Loader2 className="size-4 animate-spin" />
+              Calculando...
+            </>
+          ) : isLastStep ? (
+            <>
+              <Sparkles className="size-4" />
+              Ver Resultados
+            </>
+          ) : (
+            <>
+              Siguiente
+              <ArrowRight className="size-4" />
+            </>
+          )}
         </Button>
-      </CardFooter>
-    </>
+      </div>
+    </div>
   );
 }
